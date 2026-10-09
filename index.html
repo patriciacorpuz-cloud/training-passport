@@ -65,7 +65,7 @@ const T=[
 T.find(x=>x[0]=="cp")[2]="Reona Ido";
 let S={i:{},a:{},t:{},l:{},p:{},q:{},s:{}},tr=false;
 try{S=Object.assign(S,JSON.parse(localStorage.getItem("passport")||"{}"))}catch(e){}
-S.q=S.q||{};S.s=S.s||{};
+S.q=S.q||{};S.s=S.s||{};Object.keys(S.q).forEach(k=>{if(k!="info"&&!T.some(x=>x[0]==k))delete S.q[k]});
 const save=()=>{try{localStorage.setItem("passport",JSON.stringify(S))}catch(e){}};
 const done=x=>{const a=S.a[x[0]]||[],t=S.t[x[0]]||{};return S.l[x[0]]&&[0,1,2].every(k=>(a[k]||"").trim())&&x[4].every((_,k)=>t[k]&&(S.p[x[0]]||{})[k])};
 const st=x=>done(x)?["done","Completed"]:((S.t[x[0]]||{})[0]!==undefined||Object.keys(S.t[x[0]]||{}).length)?["wait","In progress"]:["","Pending"];
@@ -125,7 +125,7 @@ document.addEventListener("click",async e=>{const b=e.target.closest("button");i
   else{if(!S.l.info)return say("Please fill in and save your details at the top first.");const a=S.a[d.sv]||[];ok=[0,1,2].every(k=>(a[k]||"").trim());msg="Please answer all 3 questions and upload the attendance photo(s) first.";const p=S.p[d.sv]||{};ok=ok&&T.find(x=>x[0]==d.sv)[4].every((_,k)=>p[k])}
   if(!ok)return say(msg);
   if(!await yes("Once saved, this cannot be edited. Save now?"))return;
-  S.l[d.sv]=today();save();render();queue(d.sv,d.sv!="info");if(d.sv=="info")T.forEach(x=>{if(S.l[x[0]]&&!S.s[x[0]])queue(x[0],1)})}
+  const k=d.sv;S.l[k]=today();save();render();queue(k,k!="info");if(k=="info")T.forEach(x=>{if(S.l[x[0]]&&!S.s[x[0]])queue(x[0],1)})}
  else if(d.rp){if(!await yes("Remove this photo?"))return;delete (S.p[d.rp]||{})[d.k];save();render()}
  else if(d.ul&&tr){if(!await yes("Unlock this section for editing?"))return;delete S.l[d.ul];save();render()}});
 document.addEventListener("change",e=>{const d=e.target.dataset;if(d.p){addPhoto(e.target);return}if(!d.t)return;
